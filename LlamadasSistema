@@ -1,0 +1,126 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<fcntl.h>
+#include<errno.h>
+#include<string.h>
+
+int verificar(int arg)
+{
+    if(arg < 0)
+    {
+        if(errno == EAGAIN)
+        {
+            perror("Archivo bloqueado\n");
+        }
+        else if(errno == EACCES)
+        {
+        perror("Provlemas de permismos del archivo.\n");
+        }
+        else if(errno == EBADF)
+        {
+            perror("Mal descriptor del archivo.\n");
+        }
+        else
+        {
+        printf("Error desconocido.\n");
+        exit(1); 
+        }
+    }
+    return 0;
+}
+
+int main()
+{
+    int fd, n, m;
+    float arr[] = {75.2, 12, 52.13, 29.08, 1};
+    
+    fd = creat("datos.txt", 777);
+    verificar(fd);
+    
+    n = write(fd, &arr, sizeof(arr));
+    verificar(n);
+
+}
+
+int main()
+{
+    int fd, m;
+    float arr[] = {75.2, 12, 52.13, 29.08, 1};
+    float v1, v2, v3, v4, v5;
+
+    
+    fd = open("datos.txt", O_RDONLY);
+    verificar(fd); 
+    
+    float numeros[5];
+    ssize_t bytes_leidos = read(fd, numeros, sizeof(numeros));
+    verificar(bytes_leidos);
+    
+    close(fd);
+    
+    int num = bytes_leidos / sizeof(float);
+    
+    for (int i = 0; i < num; i++) {
+        printf("%.1f ", numeros[i]);
+    }
+    
+    printf("\n");
+}
+
+int main()
+{
+    int fd, n1, n2, n3, n4, n5;
+    float v1 = 4.2;
+    float v2 = 2.1;
+    float v3 = 9.8;
+    float v4 = 7.12;
+    float v5 = 7.8;
+
+    fd = creat("datos2.txt", 777);
+    verificar(fd);
+    
+    n1 = write(fd, &v1, sizeof(v1));
+    verificar(n1);
+    printf("%d\n", n1);
+    n2 = write(fd, &v2, sizeof(v2));
+    verificar(n2);
+    printf("%d\n", n2);
+    n3 = write(fd, &v3, sizeof(v3));
+    verificar(n3);
+    printf("%d\n", n3);
+    n4 = write(fd, &v4, sizeof(v4));
+    verificar(n4);
+    printf("%d\n", n4);
+    n5 = write(fd, &v5, sizeof(v5));
+    verificar(n5);
+    printf("%d\n", n5);
+
+    close(fd);
+    return 0;
+}
+
+int main()
+{
+    int fd, m;
+    float arr[] = {75.2, 12, 52.13, 29.08, 1};
+    float v1, v2, v3, v4, v5;
+
+    
+    fd = open("/Users/jorgetovar/Documents/Sistemas operativos/datos2.txt", O_RDONLY);
+    verificar(fd); 
+    
+    float numeros[5];
+    ssize_t bytes_leidos = read(fd, numeros, sizeof(numeros));
+    verificar(bytes_leidos);
+    
+    close(fd);
+    
+    int num = bytes_leidos / sizeof(float);
+    
+    for (int i = 0; i < num; i++) {
+        printf("%f ", numeros[i]);
+    }
+    printf("\n");
+    return 0;
+}
